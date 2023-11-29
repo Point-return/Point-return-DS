@@ -42,7 +42,7 @@ def get_solution(
         levenshtein_distance_max
     )
     solution = sorted(suitable_solution, key=lambda x: x['levenshtein_distance'], reverse=True)
-    last_index = length - 1 if length < len(solution) else len(solution) - 1
+    last_index = length if length < len(solution) else len(solution)
     
     return solution[0: last_index]
 
