@@ -1,11 +1,11 @@
 import pandas as pd
 from fuzzywuzzy import fuzz
 
-def get_not_continuous_words(data): 
+def get_not_continuous_words(data: pd.DataFrame): 
     """Separate the combined words in a column 'name'.
     
     Args:
-        data: pd.Series.
+        data: list of produscts produced and distributed by the manufacturer.
 
     Returns:
         not continuous words in the names of the manufacturer's products.
@@ -25,11 +25,11 @@ def get_not_continuous_words(data):
 
     return result
 
-def get_not_continuous_words_when_entering(row):
+def get_not_continuous_words_when_entering(row: str):
     """Separates merged words when entering a dealer product.
     
     Args:
-        row: str.
+        row: product sold by dealer.
 
     Returns:
         there are no merged words when entering a dealer product.
@@ -55,16 +55,16 @@ def get_not_continuous_words_when_entering(row):
     return result
 
 def get_suitable_products(
-        dealer_product, 
-        manufacturer_products,
-        levenshtein_distance_max,
+        dealer_product: str, 
+        manufacturer_products: pd.DataFrame,
+        levenshtein_distance_max: int,
     ):
     """A Model Explanation System.
 
     Args:
-        dealer_product: str, 
-        manufacturer_products: pd.Series,
-        levenshtein_distance_max: int.
+        dealer_product: product sold by dealer, 
+        manufacturer_products: list of produscts produced and distributed by the manufacturer,
+        levenshtein_distance_max: distances to measure the difference between the names of two products.
         
     Returns: 
         Array of suitable manufactur products.
@@ -92,9 +92,9 @@ def get_solution(
     """Sorting recommended manufacturer products in descending order of Levenshtein distance.
     
     Args:
-        dealer_product: str,
-        length: int,
-        levenshtein_distance_max: int.
+        dealer_product: product sold by dealer,
+        length: length of the list of recommended products,
+        levenshtein_distance_max: distances to measure the difference between the names of two products.
 
     Returns:
         array of matching manufacturer products in descending order of Levenshtein distance.
