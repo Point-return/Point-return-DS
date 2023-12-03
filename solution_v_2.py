@@ -2,12 +2,14 @@ import pandas as pd
 from fuzzywuzzy import fuzz
 
 def get_not_continuous_words(data): 
-    '''
+    """Separate the combined words in a column 'name'.
     
-    The function separates the combined
-    words in a column 'name'.
-    
-    '''
+    Args:
+        data: pd.Series.
+
+    Returns:
+        not continuous words in the names of the manufacturer's products.
+    """
     list_product_word = [
     'PROSEPT', 'концентрат', 'Crystal', 'готовый', 'Duty', 'Multipower', 'MULTIPOWER', 'White', 'Belizna',
     'Cooky', 'Diona', 'готовое', 'ULTRA', 'Antifoam', 'Bath', 'Universal', 
@@ -24,12 +26,14 @@ def get_not_continuous_words(data):
     return result
 
 def get_not_continuous_words_when_entering(row):
-    '''
+    """Separates merged words when entering a dealer product.
     
-    The function separates concatenated 
-    words when entering a dealer product.
-    
-    '''
+    Args:
+        row: str.
+
+    Returns:
+        there are no merged words when entering a dealer product.
+    """
     list_product_dealer = [
     'антижук', 'PROSEPT', 'universal', 'ULTRA', 'grill', 'удаления',
     'floor', 'remover', 'средство', 'стекол', 'зеркал', 'пластика',
@@ -51,16 +55,20 @@ def get_not_continuous_words_when_entering(row):
     return result
 
 def get_suitable_products(
+        dealer_product, 
+        manufacturer_products,
+        levenshtein_distance_max,
+    ):
+    """A Model Explanation System.
+
+    Args:
         dealer_product: str, 
         manufacturer_products: pd.Series,
-        levenshtein_distance_max: int,
-    ) -> list:
-    '''
-    A Model Explanation System
-    
-    return: Array of suitable manufactur products
-    '''
-    
+        levenshtein_distance_max: int.
+        
+    Returns: 
+        Array of suitable manufactur products.
+    """
     suitable_products = []
     for product in manufacturer_products['name_split']:
         l_d = fuzz.token_sort_ratio(get_not_continuous_words_when_entering(dealer_product), product)
@@ -80,8 +88,17 @@ def get_solution(
         dealer_product: str,
         length: int = 10,
         levenshtein_distance_max: int = 50,
-    ) -> list:
+    ):
+    """Sorting recommended manufacturer products in descending order of Levenshtein distance.
+    
+    Args:
+        dealer_product: str,
+        length: int,
+        levenshtein_distance_max: int.
 
+    Returns:
+        array of matching manufacturer products in descending order of Levenshtein distance.
+    """
     manufacturer_products = pd.read_csv('manufacturer_data.csv')
     manufacturer_products = manufacturer_products.dropna() 
     manufacturer_products['name_split'] = manufacturer_products.apply(get_not_continuous_words, axis=1) 
